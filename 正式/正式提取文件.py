@@ -149,6 +149,10 @@ def checkifContainUrl(url):
             if("无障碍" in a.title):
                 return
             print('标题 : ' + a.title +'         链接==' + url)
+            # scrip = open(r'爬取过程中涉及到的链接.txt', 'a+', encoding='utf-8')  # 文件路径、操作模式、编码  # r''
+            # scrip.write(url + "\n" + a.title + "\n")
+            # scrip.close()
+
             zhaopinresult = "招聘" in a.title
             if zhaopinresult:
                 print('存在招聘信息的标题::' + a.title + '         链接== ' + url)
