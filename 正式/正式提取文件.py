@@ -152,7 +152,7 @@ def checkifContainUrl(url):
             zhaopinresult = "招聘" in a.title
             if zhaopinresult:
                 print('存在招聘信息的标题::' + a.title + '         链接== ' + url)
-                # print(a.text)
+                print(a.text)
                 f = open(r'resultDicTest/%s.txt'%a.title, 'w', encoding='utf-8')  # 文件路径、操作模式、编码  # r''
                 f.write(url + "\n" + a.title + "\n"  + "\n" + "\n"+ a.text + "\n")
                 f.close()

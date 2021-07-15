@@ -77,15 +77,13 @@ def getSecondUtl(firsturl):
     for x in soup.find_all('a'):
         link = x.get('href')
         if link:
-            # if ("logout" in link):
-            #     return
+            if ("logout" in link):
+                return
             linklst.append(link)
             if(GetSecondLinkHasNetloc(firsturl, link)):
                 naninani = GetSecondLinkHasNetloc(firsturl, link)
                 if(secondaryLinkValid(naninani) != "123"):# 如果二级链接有效，再判断是否有标题和正文
                     checkifContainUrl(naninani)
-                else:
-                    print("链接无效")
 
 
 
