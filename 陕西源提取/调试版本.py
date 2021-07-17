@@ -7,7 +7,10 @@ import re
 from urllib import parse
 from bs4 import BeautifulSoup #用于解析网页的库
 import time
-
+import pymysql
+from scrapy import signals
+from twisted.enterprise import adbapi
+from pymysql import cursors
 
 # 构造请求头
 headers = {
@@ -84,51 +87,9 @@ def getSecondUtl(firsturl):
                 naninani = GetSecondLinkHasNetloc(firsturl, link)
                 if(secondaryLinkValid(naninani) != "123"):# 如果二级链接有效，再判断是否有标题和正文
                     checkifContainUrl(naninani)
-                else:
-                    print("链接无效")
-
-
-
-
-# 获取页面的li中a的值
-def get_title_html(firsturl):
-    headers = {'User-Agent': UserAgent().random}
-    response = requests.request("GET", firsturl, headers=headers)  # 获取网页数据
-    response.encoding = response.apparent_encoding  # 当获取的网页有乱码时加
-    soup = BeautifulSoup(response.text, 'html.parser')
-    bf = soup.find('div', class_='view TRS_UEDITOR trs_paper_default trs_web')
-
-    # 提取二级链接的地址
-    linklst = []
-    # for x in soup.find_all('a', href=re.compile('html')):
-    for x in soup.find_all('a'):
-
-        link = x.get('href')
-        if ("logout" in link):
-            continue
-        if ("login" in link):
-            continue
-        if ("void" in link):
-            continue
-        if ("user" in link):
-            continue
-        if ("javascript" in link):
-            continue
-        if link:
-            linklst.append(link)
-            if (GetSecondLinkHasNetloc(firsturl, link)):
-                naninani = GetSecondLinkHasNetloc(firsturl, link)
-            else:
-                continue
-
-    soup=BeautifulSoup(naninani,"html.parser")
-    title_url=soup.find('div',class_='clearfix dirconone').find_all('li')
-    for i in title_url:
-        url=i.find('a')['href']
-        if (GetSecondLinkHasNetloc(firsturl, link)):
-            naninani = GetSecondLinkHasNetloc(firsturl, link)
-            if (secondaryLinkValid(naninani) != ""):  # 如果二级链接有效，再判断四否有标题和正文
-                checkifContainUrl(naninani)
+                    # getSecondUtl(naninani)
+                # else:
+                    # print("链接无效")
 
 # 判断标题是否存在"招聘"，如果有，提取正文
 def checkifContainUrl(url):
@@ -159,7 +120,7 @@ def checkifContainUrl(url):
             zhaopinresult = "招聘" in a.title
             if zhaopinresult:
                 print('存在招聘信息的标题::' + a.title + '         链接== ' + url)
-                print(a.text)
+                # print(a.text)
                 # f = open(r'resultDic/%s.txt'%a.title, 'w', encoding='utf-8')  # 文件路径、操作模式、编码  # r''
                 # f.write(a.title + "\n" + a.text + "\n")
                 # f.close()
@@ -172,7 +133,7 @@ print("1、数据源的个数=",nrows)
 
 for i in range(nrows):
     url = sh.cell_value(i,11)  # 依次读取每行第11列的数据，也就是 URL
-    print("2、访问第%d个链接:",i + 1)
+    print("2、访问第%d个链接:"%(i + 1))
     print('=' * 40)
     getBaseInfo(url)
     getSecondUtl(url)
