@@ -124,9 +124,7 @@ def getSecondUtl(firsturl):
                     linklst.append(link)
                     if (GetSecondLinkHasNetloc(firsturl, link)):
                         naninani = GetSecondLinkHasNetloc(firsturl, link)
-                        if (secondaryLinkValid(naninani) == "123"):
-                            break
-                        if (secondaryLinkValid(naninani) == "456"):  # 如果二级链接有效，再判断是否有标题和正文
+                        if (secondaryLinkValid(naninani) != "123"):  # 如果二级链接有效，再判断是否有标题和正文
                             checkifContainUrl(naninani, '2')
         except:
             print("服务器拒绝连接........，休息5s ，第%d次    "%i + firsturl)
@@ -180,9 +178,8 @@ def getThreeUtl(secondurl):
                     linklst.append(link)
                     if (GetSecondLinkHasNetloc(secondurl, link)):
                         naninani = GetSecondLinkHasNetloc(secondurl, link)
-                        if (secondaryLinkValid(naninani) == "123"):
-                            break
-                        if (secondaryLinkValid(naninani) == "456"):  # 如果二级链接有效，再判断是否有标题和正文
+                        if (secondaryLinkValid(naninani) != "123"):
+
                             checkifContainUrl(naninani, '3')
 
 
@@ -262,9 +259,8 @@ def checkifContainUrl(url,status):
 
 print('=' * 40)
 # 选择数据源
-# url = 'http://www.beiliu.gov.cn/'
-url = 'http://hengkou.ankang.gov.cn/'
-
+url = 'http://www.beiliu.gov.cn/'
+# url = 'http://hengkou.ankang.gov.cn/'
 print('我是雄赳赳气昂昂的数据源:' + url)
 getSecondUtl(url)
 print('=' * 40)

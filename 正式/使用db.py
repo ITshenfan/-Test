@@ -170,55 +170,19 @@ def checkifContainUrl(url):
             if zhaopinresult:
                 print('存在招聘信息的标题::' + a.title + '         链接== ' + url)
                 print(a.text)
-
-                db = pymysql.connect(host='localhost',
-                                     port=3306,
-                                     user='root',
-                                     password='12345678',
-                                     db='shanxiyuan',
-                                     charset='utf8'
-                                     )  # 连接数据库
-
+                sql = "INSERT INTO EMPLOYER(LINK,TITLE,TEXT) VALUES ('%s', '%s',  '%s')" % (a.title, url, a.text)
                 cursor = db.cursor()
-                cursor.execute("DROP TABLE IF EXISTS EMPLOYER")
-
-                sql = """CREATE TABLE EMPLOYER (
-                                      ID INT PRIMARY KEY AUTO_INCREMENT,
-                                      LINK  VARCHAR(255),
-                                      TITLE VARCHAR(255),
-                                      TEXT TEXT )"""
-                try:
-                    cursor = db.cursor()
-                    cursor.execute(sql)
-                except:
-                    db.ping()
-                    cursor = db.cursor()
-                    cursor.execute(sql)
-
-
-
-                # sql = "INSERT INTO EMPLOYER(LINK,TITLE,TEXT) VALUES ("'%s'", "'%s'",  "'%s'")" % (a.title, url, a.text)
-                # cursor.execute(sql)
-
-                sqlw = """INSERT INTO EMPLOYER (LINK, TITLE, TEXT) VALUES (%s,%s,%s)"""
-                data = ("'%s'"%a.title, "'%s'"%url, "'%s'"%a.text)
-
-                try:
-                    cursor.execute(sqlw%data)
-                    db.commit()
-                    print('插入数据成功')
-                except:
-                    db.rollback()
-                    print("插入数据失败")
+                cursor.execute(sql)
+                # data = ("'%s'"%a.title, "'%s'"%url, "'%s'"%a.title)
+                #
+                # cursor.execute(sqlw%data)
+                sta = 1
+                if sta == 1:
+                    print('插入成功')
+                else:
+                    print('插入失败')
+                db.commit()
                 db.close()
-
-                # sta = cursor.execute(sqlw%data)
-                # if sta == 1:
-                #     print('插入成功')
-                # else:
-                #     print('插入失败')
-                # db.commit()
-                # db.close()
 
 
 
@@ -228,29 +192,26 @@ def create():
                          user='root',
                          password='12345678',
                          db='shanxiyuan',
-                         charset='utf8',
-                         autocommit = True,
+                         charset='utf8'
                          )  # 连接数据库
     cursor = db.cursor()
     cursor.execute("DROP TABLE IF EXISTS EMPLOYER")
 
-    # sql = """CREATE TABLE EMPLOYER (
-    #         ID INT PRIMARY KEY AUTO_INCREMENT,
-    #         LOGO  CHAR(255),
-    #         PRICE CHAR(20),
-    #         AUTHER CHAR(255) )"""
+    sql = """CREATE TABLE EMPLOYER (
+                          ID INT PRIMARY KEY AUTO_INCREMENT,
+                          LINK  VARCHAR(255),
+                          TITLE VARCHAR(255),
+                          TEXT TEXT )"""
 
-    # cursor.execute(sql)
-
+    cursor.execute(sql)
+    sqlw = """INSERT INTO EMPLOYER (LINK, TITLE, TEXT) VALUES (%s,%s,%s)"""
 
 
 # 获取总行数
 nrows = sh.nrows
 print('=' * 40)
 print("1、数据源的个数=",nrows)
-
-
-
+create()
 
 for i in range(nrows):
     url = sh.cell_value(i,11)  # 依次读取每行第11列的数据，也就是 URL

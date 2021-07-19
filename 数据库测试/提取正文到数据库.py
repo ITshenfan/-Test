@@ -6,7 +6,6 @@ import re
 from urllib import parse
 from bs4 import BeautifulSoup #用于解析网页的库
 import time
-import conndb
 import pymysql
 
 # 构造请求头
@@ -171,37 +170,10 @@ def checkifContainUrl(url):
                 print('存在招聘信息的标题::' + a.title + '         链接== ' + url)
                 print(a.text)
 
-                db = pymysql.connect(host='localhost',
-                                     port=3306,
-                                     user='root',
-                                     password='12345678',
-                                     db='shanxiyuan',
-                                     charset='utf8'
-                                     )  # 连接数据库
-
-                cursor = db.cursor()
-                cursor.execute("DROP TABLE IF EXISTS EMPLOYER")
-
-                sql = """CREATE TABLE EMPLOYER (
-                                      ID INT PRIMARY KEY AUTO_INCREMENT,
-                                      LINK  VARCHAR(255),
-                                      TITLE VARCHAR(255),
-                                      TEXT TEXT )"""
-                try:
-                    cursor = db.cursor()
-                    cursor.execute(sql)
-                except:
-                    db.ping()
-                    cursor = db.cursor()
-                    cursor.execute(sql)
-
-
-
-                # sql = "INSERT INTO EMPLOYER(LINK,TITLE,TEXT) VALUES ("'%s'", "'%s'",  "'%s'")" % (a.title, url, a.text)
-                # cursor.execute(sql)
-
-                sqlw = """INSERT INTO EMPLOYER (LINK, TITLE, TEXT) VALUES (%s,%s,%s)"""
-                data = ("'%s'"%a.title, "'%s'"%url, "'%s'"%a.text)
+                db.ping(reconnect=True)
+                status = 2;
+                sqlw = """INSERT INTO ExaminationSituation (PARENTID,LINK, TITLE, TEXT) VALUES (%d,%s,%s,%s)"""
+                data = (status,"'%s'"%url, "'%s'"%a.title, "'%s'"%a.text)
 
                 try:
                     cursor.execute(sqlw%data)
@@ -212,13 +184,6 @@ def checkifContainUrl(url):
                     print("插入数据失败")
                 db.close()
 
-                # sta = cursor.execute(sqlw%data)
-                # if sta == 1:
-                #     print('插入成功')
-                # else:
-                #     print('插入失败')
-                # db.commit()
-                # db.close()
 
 
 
@@ -249,9 +214,33 @@ nrows = sh.nrows
 print('=' * 40)
 print("1、数据源的个数=",nrows)
 
+db = pymysql.connect(host='localhost',
+                                     port=3306,
+                                     user='root',
+                                     password='12345678',
+                                     db='shanxiyuan',
+                                     charset='utf8'
+                                     )  # 连接数据库
 
+cursor = db.cursor()
+cursor.execute("DROP TABLE IF EXISTS ExaminationSituation")
 
+sql = """CREATE TABLE ExaminationSituation (
+                                      ID INT PRIMARY KEY AUTO_INCREMENT,
+                                      PARENTID INT(11),
+                                      LINK  VARCHAR(255),
+                                      TITLE VARCHAR(255),
+                                      TEXT TEXT
+                                      )"""
 
+try:
+    cursor = db.cursor()
+    cursor.execute(sql)
+except:
+    db.ping()
+    cursor = db.cursor()
+    cursor.execute(sql)
+i = 44
 for i in range(nrows):
     url = sh.cell_value(i,11)  # 依次读取每行第11列的数据，也就是 URL
     print("2、访问第%d个链接:"%i)

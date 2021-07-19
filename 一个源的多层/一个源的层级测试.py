@@ -88,8 +88,8 @@ def getSecondUtl(firsturl):
     for x in soup.find_all('a'):
         link = x.get('href')
         if link:
-            if(link in linklst):
-                break
+            # if(link in linklst):
+            #     break
             linklst.append(link)
             if(GetSecondLinkHasNetloc(firsturl, link)):
                 naninani = GetSecondLinkHasNetloc(firsturl, link)
