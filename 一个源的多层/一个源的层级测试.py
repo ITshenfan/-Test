@@ -25,12 +25,15 @@ def GetSecondLinkHasNetloc(firstlink,link):
         return link
     else:
         my_url = parse.urlparse(firstlink)
-        naninani = my_url.scheme + '://' + my_url.netloc
-        naninani = naninani + link
-        if(my_url.netloc in naninani):
+        if (link[:1] == '.'):
+            naninani = my_url.scheme + '://' + my_url.netloc + my_url.path + link
+            print(naninani)
             return naninani
-
-
+        else:
+            naninani = my_url.scheme + '://' + my_url.netloc
+            naninani = naninani + link
+            if(my_url.netloc in naninani):
+                return naninani
 # 二级链接是否是有效的招聘公告
 def secondaryLinkValid(secondaryLink):
     if ("article" in secondaryLink):
@@ -45,6 +48,10 @@ def secondaryLinkValid(secondaryLink):
         return "123"
     if ("javascript" in secondaryLink):
         return "123"
+    if ("beian" in secondaryLink):
+        return "123"
+    else:
+        return "456"
 
 
 def guolv(title,url,status):
@@ -81,6 +88,8 @@ def getSecondUtl(firsturl):
     for x in soup.find_all('a'):
         link = x.get('href')
         if link:
+            if(link in linklst):
+                break
             linklst.append(link)
             if(GetSecondLinkHasNetloc(firsturl, link)):
                 naninani = GetSecondLinkHasNetloc(firsturl, link)
