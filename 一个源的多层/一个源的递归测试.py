@@ -262,5 +262,5 @@ print('=' * 40)
 url = 'http://www.beiliu.gov.cn/'
 # url = 'http://hengkou.ankang.gov.cn/'
 print('我是雄赳赳气昂昂的数据源:' + url)
-getSecondUtl(url)
+# getSecondUtl(url)
 print('=' * 40)
